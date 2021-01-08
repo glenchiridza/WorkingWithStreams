@@ -1,7 +1,10 @@
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.file.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +26,8 @@ public class CreateZipMain {
         try(FileSystem zipfs = openZip(Paths.get("contents.zip"));){
 
             copyToZip(zipfs);
+            writeToFileInZip1(zipfs,data);
+            writeToFileInZip2(zipfs, data);
         }catch (Exception e){
             System.out.println(e.getClass().getSimpleName() + "  =  "+ e.getMessage());
         }
@@ -50,4 +55,26 @@ public class CreateZipMain {
 
 //        StandardCopyOption.REPLACE_EXISTING -- if there is an already existing file, replace it
     }
+
+    private static void writeToFileInZip1(FileSystem zipFs, String[] data) throws IOException{
+
+        //method one ,,, old way of writing into a file
+        try(BufferedWriter writer = Files.newBufferedWriter(zipFs.getPath("/newFile1.txt"))){
+            for (String s: data){
+                writer.write(s);
+                writer.newLine();
+            }
+        }
+
+    }
+
+    private static void writeToFileInZip2(FileSystem zipFs, String[] data) throws IOException{
+
+        //new way of writing into a file use the Files
+
+        Files.write(zipFs.getPath("/newFile2.txt"), Arrays.asList(data),
+                Charset.defaultCharset(),StandardOpenOption.CREATE);
+
+    }
+
 }
