@@ -1,10 +1,7 @@
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +43,11 @@ public class CreateZipMain {
     private static void copyToZip(FileSystem zipFs) throws IOException{
 
         Path sourceFile = Paths.get("file1.txt");
+//        or could use Path sourceFile = FileSystems.getDefault().getPath("file1.txt") but Path is shorter
+        Path destinationFile = zipFs.getPath("/fileCopied.txt");
 
+        Files.copy(sourceFile,destinationFile,StandardCopyOption.REPLACE_EXISTING);
+
+//        StandardCopyOption.REPLACE_EXISTING -- if there is an already existing file, replace it
     }
 }
